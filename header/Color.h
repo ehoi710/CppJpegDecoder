@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils.h"
+#include "Utils.h"
 
 struct YUV {
 	int Y, Cb, Cr;

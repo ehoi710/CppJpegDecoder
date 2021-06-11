@@ -2,9 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "utils.h"
+#include "Utils.h"
 #include "Color.h"
 
+// Image에 대한 인터페이스.
 class Image {
 public:
 	virtual Size getSize() const = 0;

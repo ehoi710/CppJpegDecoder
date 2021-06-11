@@ -116,6 +116,7 @@ namespace EJPEG {
 			num_of_symbols.insert(num_of_symbols.begin() + 1, iter, iter + 16);
 			iter += 16; len -= 16;
 
+			huffmanTables[getType(type)].clear();
 			int code = 0;
 			for (int code_length = 1; code_length <= 16; code_length++) {
 				code <<= 1;
@@ -290,8 +291,6 @@ namespace EJPEG {
 
 				for (int j = 0; j < 2; j++) {
 					for (int i = 0; i < 2; i++) {
-						if (y + j >= v_bound.end) continue;
-						if (x + i >= h_bound.end) continue;
 						mcus[y + j][x + i][0] = calcIdct(comps[cnt++]);
 					}
 				}
@@ -301,9 +300,6 @@ namespace EJPEG {
 
 				for (int j = 0; j < 16; j++) {
 					for (int i = 0; i < 16; i++) {
-						if (y + (j / 8) >= v_bound.end) continue;
-						if (x + (i / 8) >= h_bound.end) continue;
-
 						MCU& mcu = mcus[y + (j / 8)][x + (i / 8)];
 
 						mcu[1][(j % 8) * 8 + (i % 8)] = Cb[(j / 2) * 8 + (i / 2)];
@@ -325,8 +321,8 @@ namespace EJPEG {
 				for (int i = 0; i < 4; i++)
 					comps[cnt++] = buildMatrix(scanStream, 0, quantTables[0], coef[0]);
 
-				comps[cnt++] = buildMatrix(scanStream, 1, quantTables[1], coef[1]);
-				comps[cnt++] = buildMatrix(scanStream, 1, quantTables[1], coef[2]);
+				comps[cnt++] = buildMatrix(scanStream, 1, quantTables[quantMap[1]], coef[1]);
+				comps[cnt++] = buildMatrix(scanStream, 1, quantTables[quantMap[2]], coef[2]);
 			}
 		}
 
@@ -348,7 +344,7 @@ namespace EJPEG {
 
 	MCU**		JPEG::VLD() {
 		MCU** mcus = new MCU * [mcuCount.y + 1];
-		for (int y = 0; y < mcuCount.y; y++) {
+		for (int y = 0; y < mcuCount.y + 1; y++) {
 			mcus[y] = new MCU[mcuCount.x + 1];
 		}
 
@@ -404,7 +400,7 @@ namespace EJPEG {
 			}
 		}
 
-		for (int y = 0; y < mcuCount.y; y++) {
+		for (int y = 0; y < mcuCount.y + 1; y++) {
 			delete[] mcus[y];
 		}
 		delete[] mcus;

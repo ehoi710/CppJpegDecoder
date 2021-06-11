@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <thread>
 
-#include "utils.h"
+#include "Utils.h"
 #include "Bitstream.h"
 #include "Image.h"
 #include "Bitmap.h"
@@ -98,6 +98,7 @@ namespace EJPEG {
 		std::vector<std::vector<RGBA>> data;
 
 		HuffmanTable      huffmanTables[4];
+
 		QuantizationTable quantTables[2];
 
 		Size size;
